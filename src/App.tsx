@@ -1,26 +1,194 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useFormik } from "formik";
+import * as yup from "yup";
+import styled from "styled-components";
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { LocalizationProvider, TimeField } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Dayjs } from "dayjs";
+import { useEffect } from "react";
 
 function App() {
+  // const [value, setValue] = useState<Dayjs | null>(null);
+
+  const validationSchema = yup.object({
+    name: yup.string().required("Name is required"),
+    preparation_time: yup.string().min(8, "Invalid time format (HH:mm:ss)").max(8,"Invalid time format (HH:mm:ss)").matches(/^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/, 'Invalid time format (HH:mm:ss)').required("Preparation time is required"),
+    type: yup.string().required("Type is required"),
+    no_of_slices: yup.number(),
+    diameter: yup.number(),
+    spiciness_scale: yup.number().min(1, "Spiciness scale must be between 1 and 10").max(10, "Spiciness scale must be between 1 and 10"),
+    slices_of_bread: yup.number(),
+  });
+
+
+
+  const formik = useFormik({
+    // enableReinitialize: true,
+    initialValues: {
+      name: "",
+      preparation_time: "",
+      type: "",
+      no_of_slices: null,
+      diameter: null,
+      spiciness_scale: null,
+      slices_of_bread: null,
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      values.type === "pizza" && (
+        formik.setValues({
+          ...formik.values,
+          spiciness_scale: null,
+          slices_of_bread: null,
+        })
+      )
+      const body = {
+        name: values.name,
+        preparation_time: values.preparation_time,
+        type: values.type,
+        no_of_slices: values.no_of_slices,
+        diameter: values.diameter,
+      }
+    },
+});
+
+// useEffect(() => {
+//   console.log(formik.values);
+// }, [formik]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <>
+      <FromContainer>
+        <FormTitle>Dish creater</FormTitle>
+        <Form onSubmit={formik.handleSubmit}>
+        <TextField
+          fullWidth
+          label="Name"
+          id="name"
+          name="name"
+          value={formik.values.name}
+          onChange={formik.handleChange}
+          error={formik.touched.name && Boolean(formik.errors.name)}
+          helperText={formik.touched.name && formik.errors.name}
+          onBlur={formik.handleBlur}
+          style={{ marginBottom: "20px" }}
+        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <TextField
+          fullWidth
+          id="preparation_time"
+          name="preparation_time"
+          label="Preparation time"
+          value={formik.values.preparation_time}
+          onChange={formik.handleChange}
+          error={formik.touched.preparation_time && Boolean(formik.errors.preparation_time)}
+          helperText={formik.touched.preparation_time && formik.errors.preparation_time}
+          onBlur={formik.handleBlur}
+          style={{ marginBottom: "20px" }}
+        />
+        </LocalizationProvider>
+        <FormControl fullWidth>
+        <InputLabel id="type">Type</InputLabel>
+        <Select
+          labelId="type"
+          id="type"
+          name="type"
+          label="Type"
+          value={formik.values.type}
+          onChange={formik.handleChange}
+          error={formik.touched.type && Boolean(formik.errors.type)}
+          style={{ marginBottom: "20px" }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <MenuItem value="">None</MenuItem>
+          <MenuItem value="pizza">Pizza</MenuItem>
+          <MenuItem value="soup">Soup</MenuItem>
+          <MenuItem value="sandwich">Sandwich</MenuItem>
+        </Select>
+        </FormControl>
+        {formik.values.type === "pizza" && (
+          <>
+            <TextField
+              fullWidth
+              id="no_of_slices"
+              name="no_of_slices"
+              label="Number of slices"
+              value={formik.values.no_of_slices}
+              onChange={formik.handleChange}
+              error={formik.touched.no_of_slices && Boolean(formik.errors.no_of_slices)}
+              helperText={formik.touched.no_of_slices && formik.errors.no_of_slices}
+              style={{ marginBottom: "20px" }}
+            />
+            <TextField
+              fullWidth
+              id="diameter"
+              name="diameter"
+              label="Diameter"
+              value={formik.values.diameter}
+              onChange={formik.handleChange}
+              error={formik.touched.diameter && Boolean(formik.errors.diameter)}
+              helperText={formik.touched.diameter && formik.errors.diameter}
+              style={{ marginBottom: "20px" }}
+            />
+          </>
+        )}
+        {formik.values.type === "soup" && (
+          <TextField
+            fullWidth
+            id="spiciness_scale"
+            name="spiciness_scale"
+            label="Spiciness scale"
+            value={formik.values.spiciness_scale}
+            onChange={formik.handleChange}
+            error={formik.touched.spiciness_scale && Boolean(formik.errors.spiciness_scale)}
+            helperText={formik.touched.spiciness_scale && formik.errors.spiciness_scale}
+            style={{ marginBottom: "20px" }}
+          />
+        )}
+        {formik.values.type === "sandwich" && (
+          <TextField
+            fullWidth
+            id="slices_of_bread"
+            name="slices_of_bread"
+            label="Slices of bread"
+            value={formik.values.slices_of_bread}
+            onChange={formik.handleChange}
+            error={formik.touched.slices_of_bread && Boolean(formik.errors.slices_of_bread)}
+            helperText={formik.touched.slices_of_bread && formik.errors.slices_of_bread}
+            style={{ marginBottom: "20px" }}
+          />
+        )}
+
+        <Button variant="contained" color="primary" type="submit">
+          Submit
+        </Button>
+
+        </Form>
+      </FromContainer>
+    </>
   );
 }
 
 export default App;
+
+const FromContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+`;
+
+const FormTitle = styled.h1`
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 30px;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+`;
