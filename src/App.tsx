@@ -2,10 +2,10 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import styled from "styled-components";
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { LocalizationProvider, TimeField } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Dayjs } from "dayjs";
 import { useEffect } from "react";
+import axios from "axios";
 
 function App() {
   // const [value, setValue] = useState<Dayjs | null>(null);
@@ -28,33 +28,39 @@ function App() {
       name: "",
       preparation_time: "",
       type: "",
-      no_of_slices: null,
-      diameter: null,
-      spiciness_scale: null,
-      slices_of_bread: null,
+      no_of_slices: "",
+      diameter: "",
+      spiciness_scale: "",
+      slices_of_bread: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      values.type === "pizza" && (
-        formik.setValues({
-          ...formik.values,
-          spiciness_scale: null,
-          slices_of_bread: null,
-        })
-      )
       const body = {
         name: values.name,
         preparation_time: values.preparation_time,
         type: values.type,
-        no_of_slices: values.no_of_slices,
-        diameter: values.diameter,
+        no_of_slices: values.no_of_slices === "" ? null : values.no_of_slices,
+        diameter: values.diameter === "" ? null : values.diameter,
+        spiciness_scale: values.spiciness_scale === "" ? null : values.spiciness_scale,
+        slices_of_bread: values.slices_of_bread === "" ? null : values.slices_of_bread,
+      };
+
+      axios.post("https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/", body)
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
       }
+      )
+      .catch((err) => {
+        console.log(err);
+      }
+      )
     },
 });
 
-// useEffect(() => {
-//   console.log(formik.values);
-// }, [formik]);
+useEffect(() => {
+  console.log(formik);
+}, [formik]);
 
   return (
     <>
