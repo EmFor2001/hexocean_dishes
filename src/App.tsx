@@ -59,7 +59,22 @@ function App() {
 });
 
 useEffect(() => {
-  console.log(formik);
+if (formik.values.type === "pizza") {
+  if (formik.values.no_of_slices === "") {
+    formik.setFieldError("no_of_slices", "Number of slices is required");
+  }
+  if (formik.values.diameter === "") {
+    formik.setFieldError("diameter", "Diameter is required");
+  }
+} else if (formik.values.type === "soup" && formik.values.spiciness_scale === "") {
+  formik.setFieldError("no_of_slices", "Number of slices is required");
+} else if (formik.values.type === "sandwich" && formik.values.slices_of_bread === "") {
+  formik.setFieldError("slices_of_bread", "Number of slices of bread is required");
+}
+}, [formik.values.type, formik.values.no_of_slices, formik.values.diameter, formik.values.spiciness_scale, formik.values.slices_of_bread]);
+
+useEffect(() => {
+  console.log(formik.errors);
 }, [formik]);
 
   return (
@@ -164,7 +179,7 @@ useEffect(() => {
           />
         )}
 
-        <Button variant="contained" color="primary" type="submit">
+        <Button variant="contained" color="primary" type="submit" disabled={!formik.isValid || !formik.dirty}>
           Submit
         </Button>
 
