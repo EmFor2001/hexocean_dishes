@@ -4,13 +4,11 @@ import styled from "styled-components";
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useEffect } from "react";
 import axios from "axios";
 import { ToastOptions, toast } from "react-toastify";
 
 
 function App() {
-  // const [value, setValue] = useState<Dayjs | null>(null);
 
   const validationSchema = yup.object({
     name: yup.string().required("Name is required"),
@@ -34,7 +32,6 @@ function App() {
 
 
   const formik = useFormik({
-    // enableReinitialize: true,
     initialValues: {
       name: "",
       preparation_time: "",
@@ -60,20 +57,16 @@ function App() {
 
       axios.post("https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/", body)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         toast.success("Dish created successfully", {toastId: "CreatedSuccessfully", ...settings});
       }
       )
       .catch((err) => {
-        toast.error("Something went wrong", {toastId: "Created", ...settings})
+        toast.error("Something went wrong", {toastId: "Error", ...settings})
       }
       )
     },
 });
-
-useEffect(() => {
-  console.log(formik);
-}, [formik]);
 
   return (
     <>
