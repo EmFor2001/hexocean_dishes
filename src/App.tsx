@@ -144,6 +144,7 @@ function App() {
               error={formik.touched.no_of_slices && Boolean(formik.errors.no_of_slices)}
               helperText={formik.touched.no_of_slices && formik.errors.no_of_slices}
               style={{ marginBottom: "20px" }}
+              inputProps={{ type: "number" }}
             />
             <TextField
               fullWidth
@@ -155,6 +156,7 @@ function App() {
               error={formik.touched.diameter && Boolean(formik.errors.diameter)}
               helperText={formik.touched.diameter && formik.errors.diameter}
               style={{ marginBottom: "20px" }}
+              inputProps={{ type: "number", step: "0.01" }}
             />
           </>
         )}
@@ -189,6 +191,7 @@ function App() {
             error={formik.touched.slices_of_bread && Boolean(formik.errors.slices_of_bread)}
             helperText={formik.touched.slices_of_bread && formik.errors.slices_of_bread}
             style={{ marginBottom: "20px" }}
+            inputProps={{ type: "number" }}
           />
         )}
 
