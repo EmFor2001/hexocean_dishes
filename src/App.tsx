@@ -85,7 +85,7 @@ function App() {
   return (
     <>
       <FromContainer>
-        <FormTitle>Dish creater</FormTitle>
+        <FormTitle>Dish creator</FormTitle>
         <Form onSubmit={formik.handleSubmit}>
         <TextField
           fullWidth
