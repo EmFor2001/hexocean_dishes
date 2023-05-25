@@ -27,7 +27,7 @@ function App() {
     no_of_slices: yup.number().min(1, "Number of slices must be greater than 0"),
     diameter: yup.number().min(0.01, "Diameter must be greater than 0"),
     spiciness_scale: yup.number().min(1, "Spiciness scale must be between 1 and 10").max(10, "Spiciness scale must be between 1 and 10"),
-    slices_of_bread: yup.number().min(1, "Slices of bread must be greater than 1"),
+    slices_of_bread: yup.number().min(1, "Slices of bread must be greater than 0"),
   });
 
   const settings: ToastOptions<{}> = {
