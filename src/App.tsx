@@ -25,10 +25,10 @@ function App() {
     name: yup.string().required("Name is required"),
     preparation_time: yup.string().min(8, "Invalid time format (HH:mm:ss)").max(8,"Invalid time format (HH:mm:ss)").matches(/^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/, 'Invalid time format (HH:mm:ss)').required("Preparation time is required"),
     type: yup.string().required("Type is required"),
-    no_of_slices: yup.number(),
-    diameter: yup.number(),
+    no_of_slices: yup.number().min(1, "Number of slices must be greater than 0"),
+    diameter: yup.number().min(0.01, "Diameter must be greater than 0"),
     spiciness_scale: yup.number().min(1, "Spiciness scale must be between 1 and 10").max(10, "Spiciness scale must be between 1 and 10"),
-    slices_of_bread: yup.number(),
+    slices_of_bread: yup.number().min(1, "Slices of bread must be greater than 1"),
   });
 
   const settings: ToastOptions<{}> = {
@@ -82,6 +82,9 @@ function App() {
     },
 });
 
+// useEffect(() => {
+//   console.log(formik)
+// }, [formik])
 
   return (
     <>
@@ -143,6 +146,7 @@ function App() {
               onChange={formik.handleChange}
               error={formik.touched.no_of_slices && Boolean(formik.errors.no_of_slices)}
               helperText={formik.touched.no_of_slices && formik.errors.no_of_slices}
+              onBlur={formik.handleBlur}
               style={{ marginBottom: "20px" }}
               inputProps={{ type: "number" }}
             />
@@ -155,6 +159,7 @@ function App() {
               onChange={formik.handleChange}
               error={formik.touched.diameter && Boolean(formik.errors.diameter)}
               helperText={formik.touched.diameter && formik.errors.diameter}
+              onBlur={formik.handleBlur}
               style={{ marginBottom: "20px" }}
               inputProps={{ type: "number", step: "0.01" }}
             />
@@ -190,6 +195,7 @@ function App() {
             onChange={formik.handleChange}
             error={formik.touched.slices_of_bread && Boolean(formik.errors.slices_of_bread)}
             helperText={formik.touched.slices_of_bread && formik.errors.slices_of_bread}
+            onBlur={formik.handleBlur}
             style={{ marginBottom: "20px" }}
             inputProps={{ type: "number" }}
           />
