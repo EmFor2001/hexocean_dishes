@@ -1,6 +1,14 @@
+# Basic info
+- Node version: 16.17.1
+- npm version: 8.15.0
+- Time it took me to complete the task: around 4-5h with finding the needed packages, seting up the project and debugging/checking validations
+
+### All the instructions on how to set up and start the project are listed below
+
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).\
+Start with `npm install`, to install all the dependencies and packages
 
 ## Available Scripts
 
