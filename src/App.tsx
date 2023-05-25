@@ -6,6 +6,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useEffect } from "react";
 import axios from "axios";
+import { ToastOptions, toast } from "react-toastify";
+
 
 function App() {
   // const [value, setValue] = useState<Dayjs | null>(null);
@@ -20,6 +22,15 @@ function App() {
     slices_of_bread: yup.number(),
   });
 
+  const settings: ToastOptions<{}> = {
+    position: "top-center",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: false,
+    theme: "light",
+  };
 
 
   const formik = useFormik({
@@ -45,36 +56,23 @@ function App() {
         slices_of_bread: values.slices_of_bread === "" ? null : values.slices_of_bread,
       };
 
+      
+
       axios.post("https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/", body)
       .then((res) => {
         console.log(res);
-        console.log(res.data);
+        toast.success("Dish created successfully", {toastId: "CreatedSuccessfully", ...settings});
       }
       )
       .catch((err) => {
-        console.log(err);
+        toast.error("Something went wrong", {toastId: "Created", ...settings})
       }
       )
     },
 });
 
 useEffect(() => {
-if (formik.values.type === "pizza") {
-  if (formik.values.no_of_slices === "") {
-    formik.setFieldError("no_of_slices", "Number of slices is required");
-  }
-  if (formik.values.diameter === "") {
-    formik.setFieldError("diameter", "Diameter is required");
-  }
-} else if (formik.values.type === "soup" && formik.values.spiciness_scale === "") {
-  formik.setFieldError("no_of_slices", "Number of slices is required");
-} else if (formik.values.type === "sandwich" && formik.values.slices_of_bread === "") {
-  formik.setFieldError("slices_of_bread", "Number of slices of bread is required");
-}
-}, [formik.values.type, formik.values.no_of_slices, formik.values.diameter, formik.values.spiciness_scale, formik.values.slices_of_bread]);
-
-useEffect(() => {
-  console.log(formik.errors);
+  console.log(formik);
 }, [formik]);
 
   return (
@@ -179,7 +177,18 @@ useEffect(() => {
           />
         )}
 
-        <Button variant="contained" color="primary" type="submit" disabled={!formik.isValid || !formik.dirty}>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          type="submit" 
+          disabled={
+            !formik.isValid ||
+            !formik.dirty ||
+            (formik.values.type === 'pizza' && (!formik.values.no_of_slices || !formik.values.diameter)) ||
+            (formik.values.type === 'soup' && !formik.values.spiciness_scale) ||
+            (formik.values.type === 'sandwich' && !formik.values.slices_of_bread)
+          }
+        >
           Submit
         </Button>
 
