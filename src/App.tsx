@@ -7,7 +7,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
 import { ToastContainer, ToastOptions, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
 
 type Body = {
   name: string;
@@ -82,9 +81,6 @@ function App() {
     },
 });
 
-// useEffect(() => {
-//   console.log(formik)
-// }, [formik])
 
   return (
     <>
