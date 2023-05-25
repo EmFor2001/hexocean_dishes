@@ -240,8 +240,20 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 500px;
+  width: 30%;
   padding: 30px;
   border: 1px solid #ccc;
   border-radius: 10px;
+
+  @media (max-width: 1440px) {
+    width: 40%;
+  }
+
+  @media (max-width: 1024px) {
+    width: 50%;
+  }
+
+  @media (max-width: 768px) {
+    width: 70%;
+  }
 `;
