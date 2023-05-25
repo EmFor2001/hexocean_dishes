@@ -89,7 +89,7 @@ function App() {
         <Form onSubmit={formik.handleSubmit}>
         <TextField
           fullWidth
-          label="Name"
+          label="Dish name"
           id="name"
           name="name"
           value={formik.values.name}
@@ -104,7 +104,7 @@ function App() {
           fullWidth
           id="preparation_time"
           name="preparation_time"
-          label="Preparation time"
+          label="Preparation time (HH:mm:ss)"
           value={formik.values.preparation_time}
           onChange={formik.handleChange}
           error={formik.touched.preparation_time && Boolean(formik.errors.preparation_time)}
