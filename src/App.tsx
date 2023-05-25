@@ -1,13 +1,23 @@
 import { useFormik } from "formik";
 import * as yup from "yup";
 import styled from "styled-components";
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, FormControl, InputLabel, MenuItem, Select, Slider, TextField, Typography } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
 import { ToastContainer, ToastOptions, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
 
+type Body = {
+  name: string;
+  preparation_time: string;
+  type: string;
+  no_of_slices?: string | null;
+  diameter?: string | null;
+  spiciness_scale?: string | null;
+  slices_of_bread?: string | null;
+};
 
 function App() {
 
@@ -44,17 +54,21 @@ function App() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      const body = {
+      const body: Body = {
         name: values.name,
         preparation_time: values.preparation_time,
         type: values.type,
-        no_of_slices: values.no_of_slices === "" ? null : values.no_of_slices,
-        diameter: values.diameter === "" ? null : values.diameter,
-        spiciness_scale: values.spiciness_scale === "" ? null : values.spiciness_scale,
-        slices_of_bread: values.slices_of_bread === "" ? null : values.slices_of_bread,
       };
 
-      
+      if (body.type === "pizza") {
+        body.no_of_slices = values.no_of_slices === "" ? null : values.no_of_slices;
+        body.diameter = values.diameter === "" ? null : values.diameter;
+      } else if (body.type === "soup") {
+        body.spiciness_scale = values.spiciness_scale === "" ? null : values.spiciness_scale;
+      } else if (body.type === "sandwich") {
+        body.slices_of_bread = values.slices_of_bread === "" ? null : values.slices_of_bread;
+      }
+
 
       axios.post("https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/", body)
       .then((res) => {
@@ -67,6 +81,7 @@ function App() {
       )
     },
 });
+
 
   return (
     <>
@@ -144,17 +159,24 @@ function App() {
           </>
         )}
         {formik.values.type === "soup" && (
-          <TextField
-            fullWidth
-            id="spiciness_scale"
-            name="spiciness_scale"
-            label="Spiciness scale"
-            value={formik.values.spiciness_scale}
-            onChange={formik.handleChange}
-            error={formik.touched.spiciness_scale && Boolean(formik.errors.spiciness_scale)}
-            helperText={formik.touched.spiciness_scale && formik.errors.spiciness_scale}
-            style={{ marginBottom: "20px" }}
-          />
+          <>
+            <InputLabel id="spiciness_scale">Spiciness scale</InputLabel>
+            <Slider
+              id="spiciness_scale"
+              name="spiciness_scale"
+              value={parseInt(formik.values.spiciness_scale)}
+              onChange={(event, value) => formik.setFieldValue("spiciness_scale", value)}
+              min={1}
+              max={10}
+              step={1}
+              marks
+              valueLabelDisplay="auto"
+              style={{ marginBottom: "20px" }}
+            />
+            <Typography variant="caption">
+              {formik.touched.spiciness_scale && formik.errors.spiciness_scale}
+            </Typography>
+          </>
         )}
         {formik.values.type === "sandwich" && (
           <TextField
@@ -181,6 +203,7 @@ function App() {
             (formik.values.type === 'soup' && !formik.values.spiciness_scale) ||
             (formik.values.type === 'sandwich' && !formik.values.slices_of_bread)
           }
+          style={{ width: "60%", height: "60px", marginBottom: "20px" }}
         >
           Submit
         </Button>
