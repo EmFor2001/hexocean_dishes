@@ -5,7 +5,8 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@m
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
-import { ToastOptions, toast } from "react-toastify";
+import { ToastContainer, ToastOptions, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
     closeOnClick: true,
     pauseOnHover: false,
     draggable: false,
-    theme: "light",
+    
   };
 
 
@@ -57,7 +58,6 @@ function App() {
 
       axios.post("https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/", body)
       .then((res) => {
-        // console.log(res);
         toast.success("Dish created successfully", {toastId: "CreatedSuccessfully", ...settings});
       }
       )
@@ -187,6 +187,7 @@ function App() {
 
         </Form>
       </FromContainer>
+      <ToastContainer />
     </>
   );
 }
@@ -194,6 +195,7 @@ function App() {
 export default App;
 
 const FromContainer = styled.div`
+  font-family: "Roboto", sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
